@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/field"
 import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
-import { EyeIcon, EyeOff, KeyRound, MailIcon } from "lucide-react"
+import { EyeIcon, EyeOff, KeyRound, MailIcon, User2 } from "lucide-react"
 import {
   InputGroup,
   InputGroupAddon,
@@ -34,12 +34,11 @@ const AuthComponent = ({ login }: Props) => {
       <FieldSet>
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="username">Username</FieldLabel>
-            {/* <Input id="username" type="text" placeholder="Max Leiter" /> */}
+            <FieldLabel htmlFor="email">Email</FieldLabel>
             <InputGroup>
               <InputGroupInput
-                id="username"
-                type="text"
+                id="email"
+                type="email"
                 placeholder="mail@gmail.com"
               />
               <InputGroupAddon>
@@ -47,6 +46,21 @@ const AuthComponent = ({ login }: Props) => {
               </InputGroupAddon>
             </InputGroup>
           </Field>
+          {!login && (
+            <Field>
+              <FieldLabel htmlFor="username">Username</FieldLabel>
+              <InputGroup>
+                <InputGroupInput
+                  id="username"
+                  type="text"
+                  placeholder="votre pseudo"
+                />
+                <InputGroupAddon>
+                  <User2 />
+                </InputGroupAddon>
+              </InputGroup>
+            </Field>
+          )}
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <InputGroup>
@@ -73,7 +87,7 @@ const AuthComponent = ({ login }: Props) => {
             )}
           </Field>
         </FieldGroup>
-        <Button onClick={handleLogin} className="font-bold mt-2">
+        <Button onClick={handleLogin} className="mt-2 font-bold">
           {loading ? <Spinner /> : login ? "Login" : "Register"}
         </Button>
       </FieldSet>
