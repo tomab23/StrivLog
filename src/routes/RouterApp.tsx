@@ -16,7 +16,7 @@ const RouterApp = () => {
 
       {/* FORM */}
       <Route path="/activity" element={<ActivityFormPage />} />
-      <Route path="/activity:id" element={<ActivityFormPage />} />
+      <Route path="/activity/:id" element={<ActivityFormPage />} />
 
       {/* TEST */}
     </Routes>

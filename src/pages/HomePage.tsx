@@ -18,6 +18,7 @@ const HomePage = () => {
       <div className="flex items-center gap-10">
         <Button onClick={() => navigate("/diary")}>Diary</Button>
         <Button onClick={() => navigate("/activity")}>New activity</Button>
+        <Button onClick={() => navigate(`/activity/1`)}>Activity id 1</Button>
 
         <IconSport sport="running" />
 
