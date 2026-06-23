@@ -34,11 +34,14 @@ import {
   Timer,
 } from "lucide-react"
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
-const ActivityFormPart = () => {
+type Props = {
+  id: number
+}
+
+const ActivityFormPart = ({ id } : Props) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const { id } = useParams()
   const navigate = useNavigate()
   const [activity, setActivity] = useState<Activity | null>(null)
 
@@ -106,7 +109,6 @@ const ActivityFormPart = () => {
   return (
     <div className="flex justify-center">
       <form className="w-full max-w-md">
-        <p className="my-10">ID : {id ? id : "New"}</p>
         <div className="mb-5 flex items-center justify-between">
           <Button variant={"ghost"} onClick={() => navigate(-1)}><ArrowLeft/>Retour</Button>
           <Button variant={"ghost"} onClick={() => navigate(-1)}><Eraser/>Reset</Button>
@@ -118,19 +120,18 @@ const ActivityFormPart = () => {
               <Field>
                 <FieldLabel htmlFor="date">Date*</FieldLabel>
                 <InputGroup>
-                  <InputGroupInput id="date" type="date" value={today} />
+                  <InputGroupInput id="date" type="date" value={today}  />
                   <InputGroupAddon>
                     <CalendarDays />
                   </InputGroupAddon>
                 </InputGroup>
               </Field>
               <Field>
-                <FieldLabel htmlFor="hour">Hour</FieldLabel>
+                <FieldLabel htmlFor="hour">Heure de départ</FieldLabel>
                 <InputGroup>
                   <InputGroupInput
                     id="hour"
                     type="time"
-                    placeholder="mail@gmail.com"
                   />
                   <InputGroupAddon>
                     <CalendarClock />
@@ -138,6 +139,18 @@ const ActivityFormPart = () => {
                 </InputGroup>
               </Field>
             </div>
+
+            {/* <div className="grid grid-cols-2 gap-3">
+  <Button variant="outline" className="h-16 justify-start">
+    <Calendar />
+    <span>23 juin 2026</span>
+  </Button>
+
+  <Button variant="outline" className="h-16 justify-start">
+    <CalendarClock />
+    <span>18:30</span>
+  </Button>
+</div> */}
 
             {/* SELECT SPORT */}
             <Field className="w-full">

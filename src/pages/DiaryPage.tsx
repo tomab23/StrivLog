@@ -1,7 +1,15 @@
+import DiaryDisplay from "@/components/features/diary/DiaryDisplay"
 
 const DiaryPage = () => {
   return (
-    <div>DiaryPage</div>
+    <div className="contenu">
+      <p>DiaryPage</p>
+      <br /><br /><br /><br />
+
+      <DiaryDisplay /><br />
+      <DiaryDisplay /><br />
+      <DiaryDisplay /><br />
+    </div>
   )
 }
 

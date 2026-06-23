@@ -1,11 +1,9 @@
-// date - hour - duration - distance => km - calories => kcal - note
-
 export default class Activity {
   id: number
   created_at: string
   date: string
   hour: string | null
-  duration: number
+  duration: number //minutes
   distance: number
   calories: number
   note: string | null
