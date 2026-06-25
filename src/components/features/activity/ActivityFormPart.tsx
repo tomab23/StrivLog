@@ -113,7 +113,7 @@ const ActivityFormPart = ({ id } : Props) => {
           <Button variant={"ghost"} onClick={() => navigate(-1)}><ArrowLeft/>Retour</Button>
           <Button variant={"ghost"} onClick={() => navigate(-1)}><Eraser/>Reset</Button>
         </div>
-        <FieldSet>
+        <FieldSet className="max-sm:px-5">
           <FieldGroup>
             {/* DATE / HEURE */}
             <div className="flex items-center gap-5">
