@@ -46,7 +46,7 @@ const AuthComponent = ({ login }: Props) => {
               </InputGroupAddon>
             </InputGroup>
           </Field>
-          {!login && (
+          {/* {!login && (
             <Field>
               <FieldLabel htmlFor="username">Username</FieldLabel>
               <InputGroup>
@@ -60,7 +60,7 @@ const AuthComponent = ({ login }: Props) => {
                 </InputGroupAddon>
               </InputGroup>
             </Field>
-          )}
+          )} */}
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <InputGroup>

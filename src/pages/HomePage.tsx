@@ -20,8 +20,6 @@ const HomePage = () => {
         <Button onClick={() => navigate("/activity")}>New activity</Button>
         <Button onClick={() => navigate(`/activity/1`)}>Activity id 1</Button>
 
-        <IconSport sport="running" />
-
       </div>
     </div>
   )
