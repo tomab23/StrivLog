@@ -1,8 +1,9 @@
-import ActivityFormPage from "@/pages/ActivityFormPage";
-import AuthPage from "@/pages/AuthPage";
-import DiaryPage from "@/pages/DiaryPage";
-import HomePage from "@/pages/HomePage";
-import { Route, Routes } from "react-router-dom";
+import ActivityFormPage from "@/pages/ActivityFormPage"
+import AuthPage from "@/pages/AuthPage"
+import DiaryPage from "@/pages/DiaryPage"
+import HomePage from "@/pages/HomePage"
+import { Route, Routes } from "react-router-dom"
+import PrivateRoute from "./PrivateRoute"
 
 const RouterApp = () => {
   return (
@@ -11,8 +12,10 @@ const RouterApp = () => {
       {/* PUBLIC */}
       <Route path="/" element={<AuthPage login />} />
       <Route path="/register" element={<AuthPage login={false} />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/diary" element={<DiaryPage />} />
+
+      {/* PRIVATE */}
+      <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+      <Route path="/diary" element={<PrivateRoute><DiaryPage /></PrivateRoute>} />
 
       {/* FORM */}
       <Route path="/activity" element={<ActivityFormPage />} />
@@ -20,7 +23,7 @@ const RouterApp = () => {
 
       {/* TEST */}
     </Routes>
-  );
-};
+  )
+}
 
-export default RouterApp;
+export default RouterApp
