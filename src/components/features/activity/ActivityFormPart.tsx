@@ -33,7 +33,7 @@ import {
   LandPlot,
   Timer,
 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFormik } from "formik"
 import {
@@ -42,36 +42,38 @@ import {
 } from "@/schemas/ActivitySchema"
 import { formatDurationTime } from "@/helpers/FormatDurationTime"
 import { formatTime } from "@/helpers/FormatTime"
+import { useActivity } from "@/hooks/UseActivity"
 
 type Props = {
-  id: number
+  id: string
 }
 
 const ActivityFormPart = ({ id }: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const [activity, setActivity] = useState<Activity | null>(null)
+  const { addActivity, editActivity, error, removeActivity, fetchActivitys, fetchActivityById } = useActivity();
 
-  //   useEffect(() => {
-  //   const loadSession = async () => {
-  //     if (id) setLoading(true)
-  //     if (!id) return
-  //     try {
-  //       const data = await fetchSessionById(id)
-  //       if (!data) return
-  //       setSession(data)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   loadSession()
-  // }, [id, fetchSessionById])
+    useEffect(() => {
+    const loadSession = async () => {
+      if (id) setLoading(true)
+      if (!id) return
+      try {
+        const data = await fetchActivityById(id)
+        if (!data) return
+        setActivity(data)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSession()
+  }, [id, fetchActivityById])
 
-  //   const handleDelete = (id: string) => {
-  //   removeSession(id)
-  //   fetchSessions()
-  //   navigate(-1)
-  // }
+    const handleDelete = (id: string) => {
+    removeActivity(id)
+    fetchActivitys()
+    navigate(-1)
+  }
 
   const today = formatDate(new Date())
 
@@ -91,33 +93,28 @@ const ActivityFormPart = ({ id }: Props) => {
       // alert(JSON.stringify(values))
       // setButtonLoading(true)
       if (!id) {
-        // await addActivity(
-        //   values.date,
-        //   values.hour,
-        //   values.sport,
-        //   values.distance,
-        //   values.duration,
-        //   values.calories,
-        //   values.note ?? ""
-        // )
-        alert(JSON.stringify(values))
+        await addActivity(
+            // values.date,
+            // values.hour,
+            // values.sport,
+            // values.distance,
+            // values.duration,
+            // values.calories,
+            // values.note ?? ""
+            values
+        )
+        // alert(JSON.stringify(values))
       } else {
-        // await editActivity(
-        //   id,
-        //   values.date,
-        //   values.hour,
-        //   values.sport,
-        //   values.distance,
-        //   values.duration,
-        //   values.calories,
-        //   values.note ?? ""
-        // )
-        alert(JSON.stringify(values))
+        await editActivity(
+          id,
+          values
+        )
+        // alert(JSON.stringify(values))
       }
       // setButtonLoading(false)
-      // if (!error) {
-      //   navigate(-1)
-      // }
+      if (!error) {
+        navigate(-1)
+      }
     },
   })
 
@@ -342,6 +339,7 @@ const ActivityFormPart = ({ id }: Props) => {
             </Button>
           )}
         </FieldSet>
+        {error && <p>{error.message} - {error.code} - {error.status}</p>}
       </form>
     </div>
   )

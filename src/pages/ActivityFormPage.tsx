@@ -9,7 +9,7 @@ const ActivityFormPage = () => {
   return (
     <div className="contenu">
       <p className="my-10">ID : {id ? id : "New"}</p>
-        <ActivityFormPart id={Number(id)} />
+        <ActivityFormPart id={String(id)} />
     </div>
   )
 }
