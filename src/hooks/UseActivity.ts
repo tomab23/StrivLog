@@ -7,7 +7,7 @@ import { deleteActivityById, getActivityById, getActivitys, insertActivity, upda
 
 export const useActivity = () => {
   const { user } = useAuth()
-  const [sessions, setSessions] = useState<Activity[]>([])
+  const [activitys, setActivitys] = useState<Activity[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<ParsedError | null>(null)
 
@@ -19,7 +19,7 @@ const fetchActivitys = useCallback(async () => {
   setLoading(true)
   try {
     const data = await getActivitys(user.id)
-    setSessions(data)
+    setActivitys(data)
   } catch (err) {
     setError(parseSupabaseError(err))
   } finally {
@@ -68,7 +68,7 @@ const addActivity = async (
   const removeActivity = async (id: string) => {
     if (!user) return
     await deleteActivityById(id, user.id)
-    setSessions((prev) => prev.filter((c) => c.id !== id))
+    setActivitys((prev) => prev.filter((c) => c.id !== id))
   }
 
 
@@ -92,7 +92,7 @@ const fetchActivityById = useCallback(async (id: string): Promise<Activity | nul
       if (user) {
         await fetchActivitys()
       } else {
-        setSessions([])
+        setActivitys([])
         // setError(null)
       }
     }
@@ -102,7 +102,7 @@ const fetchActivityById = useCallback(async (id: string): Promise<Activity | nul
 
 
   return {
-    sessions,
+    activitys,
     loading,
     fetchActivitys,
     fetchActivityById,
