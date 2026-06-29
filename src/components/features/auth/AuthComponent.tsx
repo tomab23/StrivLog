@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/AuthContext"
 import { useFormik } from "formik"
-import { ValidAuthSchema } from "@/schemas/AuthSchema"
+import { ValidAuthSchema, type AuthFormValues } from "@/schemas/AuthSchema"
 
 type Props = {
   log: boolean
@@ -54,7 +54,7 @@ const AuthComponent = ({ log }: Props) => {
       }, 1000)
   }
 
-  const formik = useFormik({
+  const formik = useFormik<AuthFormValues>({
     initialValues: {
       email: "",
       password: "",

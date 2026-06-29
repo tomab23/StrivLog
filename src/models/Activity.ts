@@ -2,23 +2,23 @@ export default class Activity {
   id: number
   created_at: string
   date: string
-  hour: string | null
+  hour: string
+  sport: string
+  distance: number | null
   duration: number //minutes
-  distance: number
   calories: number
   note: string | null
-  sport: string
 
   constructor(
     id: number,
     created_at: string,
     date: string,
-    hour: string | null,
+    hour: string,
+    sport: string,
+    distance: number | null,
     duration: number,
-    distance: number,
     calories: number,
-    note: string | null,
-    sport: string
+    note: string | null
   ) {
     this.id = id
     this.created_at = created_at
