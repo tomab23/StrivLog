@@ -17,7 +17,8 @@ const AuthPage = ({ login } : Props) => {
           </div>
           <div className={`bg-card flex-1 flex flex-col items-center justify-center max-sm:gap-10 max-sm:px-5 max-xl:px-2 
             ${login ? "gap-20" : "gap-10"}`}>
-            <h1 className="text-4xl max-sm:text-2xl font-semibold">{login ? "Log in to Strivelog 💪" : "Welcome in Strivelog 💪"}</h1>
+            {/* <h1 className="text-4xl max-sm:text-2xl font-semibold">{login ? "Log in to Strivelog 💪" : "Welcome in Strivelog 💪"}</h1> */}
+             <h1 className="text-4xl max-sm:text-xl font-semibold">{login ? "Connectez-vous à Strivelog 💪" : "Bienvenue sur Strivelog 💪"}</h1>
             <AuthComponent log={login} />
              {login ? 
              <p className="text-sm text-center mt-5">Vous n'avez pas de compte ? <Link to={"/register"} className="italic hover:underline">Inscrivez-vous</Link></p>
