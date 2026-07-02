@@ -33,85 +33,108 @@ import {
   LandPlot,
   Timer,
 } from "lucide-react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { useFormik } from "formik"
+import {
+  ValidActivitySchema,
+  type ActivityFormValues,
+} from "@/schemas/ActivitySchema"
+import { formatDurationTime } from "@/helpers/FormatDurationTime"
+import { formatTime } from "@/helpers/FormatTime"
+import { useActivity } from "@/hooks/UseActivity"
 
-type Props = {
-  id: number
-}
+// type Props = {
+//   id: string
+// }
 
-const ActivityFormPart = ({ id } : Props) => {
+const ActivityFormPart = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const [activity, setActivity] = useState<Activity | null>(null)
+  const {
+    addActivity,
+    editActivity,
+    error,
+    removeActivity,
+    fetchActivitys,
+    fetchActivityById,
+  } = useActivity()
+  const { id } = useParams()
 
-  //   useEffect(() => {
-  //   const loadSession = async () => {
-  //     if (id) setLoading(true)
-  //     if (!id) return
-  //     try {
-  //       const data = await fetchSessionById(id)
-  //       if (!data) return
-  //       setSession(data)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   loadSession()
-  // }, [id, fetchSessionById])
+  useEffect(() => {
+    const loadSession = async () => {
+      if (id) setLoading(true)
+      if (!id) return
+      try {
+        const data = await fetchActivityById(id)
+        if (!data) return
+        setActivity(data)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSession()
+  }, [id, fetchActivityById])
+
+  const handleDelete = (id: string) => {
+    removeActivity(id)
+    fetchActivitys()
+    navigate(-1)
+  }
 
   const today = formatDate(new Date())
 
-  // const formik = useFormik<SessionFormValues>({
-  //   initialValues: {
-  //     date: session?.date ?? today,
-  //     time: session ? formatTime(session.time) : "",
-  //     duration: session?.duration ?? 0,
-  //     location: session?.location ?? "",
-  //     type: (session?.type ?? "training") as "training" | "match",
-  //     note: session?.note ?? "",
-  //     shoes: session?.shoes ?? "",
-  //   },
-  //   enableReinitialize: true,
-  //   validationSchema: ValidSessionSchema,
-  //   onSubmit: async (values) => {
-  //     // alert(JSON.stringify(values))
-  //     setButtonLoading(true)
-  //     if (!id) {
-  //       await addSession(
-  //         values.date,
-  //         values.time,
-  //         values.duration,
-  //         values.location,
-  //         values.type,
-  //         values.note ?? "",
-  //         values.shoes ?? ""
-  //       )
-  //     } else {
-  //       await editSession(
-  //         id,
-  //         values.date,
-  //         values.time,
-  //         values.duration,
-  //         values.location,
-  //         values.type,
-  //         values.note ?? "",
-  //         values.shoes ?? ""
-  //       )
-  //     }
-  //     setButtonLoading(false)
-  //     if (!error) {
-  //       navigate(-1)
-  //     }
-  //   },
-  // })
+  const formik = useFormik<ActivityFormValues>({
+    initialValues: {
+      date: activity?.date ?? today,
+      hour: activity ? formatTime(activity.hour) : "",
+      sport: activity?.sport ?? "",
+      distance: activity?.distance ?? 0,
+      duration: activity?.duration ?? 0,
+      calories: activity?.calories ?? 0,
+      note: activity?.note ?? "",
+    },
+    enableReinitialize: true,
+    validationSchema: ValidActivitySchema,
+    onSubmit: async (values) => {
+      // alert(JSON.stringify(values))
+      // setButtonLoading(true)
+      if (!id) {
+        await addActivity(
+          // values.date,
+          // values.hour,
+          // values.sport,
+          // values.distance,
+          // values.duration,
+          // values.calories,
+          // values.note ?? ""
+          values
+        )
+        // alert(JSON.stringify(values))
+      } else {
+        await editActivity(id, values)
+        // alert(JSON.stringify(values))
+      }
+      // setButtonLoading(false)
+      if (!error) {
+        navigate(-1)
+      }
+    },
+  })
 
   return (
     <div className="flex justify-center">
-      <form className="w-full max-w-md">
+      <form onSubmit={formik.handleSubmit} className="w-full max-w-md">
         <div className="mb-5 flex items-center justify-between">
-          <Button variant={"ghost"} onClick={() => navigate(-1)}><ArrowLeft/>Retour</Button>
-          <Button variant={"ghost"} onClick={() => navigate(-1)}><Eraser/>Reset</Button>
+          <Button variant={"ghost"} onClick={() => navigate(-1)}>
+            <ArrowLeft />
+            Retour
+          </Button>
+          <Button variant={"ghost"} onClick={() => formik.resetForm()}>
+            <Eraser />
+            Reset
+          </Button>
         </div>
         <FieldSet className="max-sm:px-5">
           <FieldGroup>
@@ -120,7 +143,13 @@ const ActivityFormPart = ({ id } : Props) => {
               <Field>
                 <FieldLabel htmlFor="date">Date*</FieldLabel>
                 <InputGroup>
-                  <InputGroupInput id="date" type="date" value={today}  />
+                  <InputGroupInput
+                    id="date"
+                    type="date"
+                    value={formik.values.date}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
                   <InputGroupAddon>
                     <CalendarDays />
                   </InputGroupAddon>
@@ -132,6 +161,9 @@ const ActivityFormPart = ({ id } : Props) => {
                   <InputGroupInput
                     id="hour"
                     type="time"
+                    value={formik.values.hour}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <InputGroupAddon>
                     <CalendarClock />
@@ -139,6 +171,17 @@ const ActivityFormPart = ({ id } : Props) => {
                 </InputGroup>
               </Field>
             </div>
+
+            {formik.touched.date && formik.errors.date && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.date}
+              </p>
+            )}
+            {formik.touched.hour && formik.errors.hour && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.hour}
+              </p>
+            )}
 
             {/* <div className="grid grid-cols-2 gap-3">
   <Button variant="outline" className="h-16 justify-start">
@@ -155,9 +198,15 @@ const ActivityFormPart = ({ id } : Props) => {
             {/* SELECT SPORT */}
             <Field className="w-full">
               <FieldLabel>Sport*</FieldLabel>
-              <Select items={itemsSport}>
+              <Select
+                items={itemsSport}
+                value={formik.values.sport}
+                onValueChange={(value) => {
+                  formik.setFieldValue("sport", value)
+                }}
+              >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Choisir un sport" />
                 </SelectTrigger>
                 <SelectContent alignItemWithTrigger={false}>
                   <SelectGroup>
@@ -171,6 +220,12 @@ const ActivityFormPart = ({ id } : Props) => {
               </Select>
             </Field>
 
+            {formik.touched.sport && formik.errors.sport && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.sport}
+              </p>
+            )}
+
             {/* DISTANCE - DURATION - CALORIES */}
             <div className="flex items-center gap-5">
               <Field>
@@ -178,7 +233,15 @@ const ActivityFormPart = ({ id } : Props) => {
                   Distance<i className="text-xs">(km)</i>
                 </FieldLabel>
                 <InputGroup>
-                  <InputGroupInput id="distance" type="number" placeholder="10" />
+                  <InputGroupInput
+                    id="distance"
+                    type="number"
+                    step="0.01"
+                    placeholder="10"
+                    value={formik.values.distance ?? ""}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
                   <InputGroupAddon>
                     <LandPlot />
                   </InputGroupAddon>
@@ -193,6 +256,9 @@ const ActivityFormPart = ({ id } : Props) => {
                     id="duration"
                     type="number"
                     placeholder="60"
+                    value={formik.values.duration}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <InputGroupAddon>
                     <Timer />
@@ -208,6 +274,9 @@ const ActivityFormPart = ({ id } : Props) => {
                     id="calories"
                     type="number"
                     placeholder="0"
+                    value={formik.values.calories}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <InputGroupAddon>
                     <Flame />
@@ -215,10 +284,25 @@ const ActivityFormPart = ({ id } : Props) => {
                 </InputGroup>
               </Field>
             </div>
+            {formik.touched.distance && formik.errors.distance && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.distance}
+              </p>
+            )}
+            {formik.touched.duration && formik.errors.duration && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.duration}
+              </p>
+            )}
+            {formik.touched.calories && formik.errors.calories && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.calories}
+              </p>
+            )}
 
             <FieldDescription id="duration">
-              Durée de votre acitivté :
-              {/* {formatDurationTime(formik.values.duration)} */}
+              Durée de votre acitivté :{" "}
+              {formatDurationTime(formik.values.duration)}
             </FieldDescription>
 
             {/* NOTE */}
@@ -226,15 +310,27 @@ const ActivityFormPart = ({ id } : Props) => {
               <FieldLabel htmlFor="note">Note</FieldLabel>
               <Textarea
                 id="note"
-                placeholder="Your feedback helps us improve..."
+                placeholder="Vos notes sur l'activité..."
                 rows={4}
+                value={formik.values.note ?? ""}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
             </Field>
+            {formik.touched.note && formik.errors.note && (
+              <p className="text-sm text-destructive max-sm:text-xs">
+                {formik.errors.note}
+              </p>
+            )}
           </FieldGroup>
           {id ? (
-            <div className="flex items-center justify-between mt-2">
-              {/* onClick={() => handleDelete(id)}  */}
-              <Button variant={"destructive"} type="button" className="font-bold">
+            <div className="mt-2 flex items-center justify-between">
+              <Button
+                onClick={() => handleDelete(id)}
+                variant={"destructive"}
+                type="button"
+                className="font-bold"
+              >
                 Supprimer
               </Button>
               <Button type="submit" className="font-bold">
@@ -247,6 +343,11 @@ const ActivityFormPart = ({ id } : Props) => {
             </Button>
           )}
         </FieldSet>
+        {error && (
+          <p>
+            {error.message} - {error.code} - {error.status}
+          </p>
+        )}
       </form>
     </div>
   )

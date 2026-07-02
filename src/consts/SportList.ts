@@ -22,3 +22,5 @@ export const SportList = {
     icon: Bike,
   },
 } as const
+
+export type Sport = keyof typeof SportList

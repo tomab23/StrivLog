@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/AuthContext"
-import * as Yup from "yup"
 import { useFormik } from "formik"
+import { ValidAuthSchema, type AuthFormValues } from "@/schemas/AuthSchema"
 
 type Props = {
   log: boolean
@@ -27,11 +27,6 @@ const AuthComponent = ({ log }: Props) => {
   const { login, register } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
-  const ValidSchema = Yup.object().shape({
-    email: Yup.string().email("").required(""),
-    password: Yup.string().min(8, "").required(""),
-    // confirm: Yup.string().oneOf([Yup.ref("password")], ""),
-  })
 
   const handleLogin = async (email: string, password: string) => {
     setError(null)
@@ -59,14 +54,14 @@ const AuthComponent = ({ log }: Props) => {
       }, 1000)
   }
 
-  const formik = useFormik({
+  const formik = useFormik<AuthFormValues>({
     initialValues: {
       email: "",
       password: "",
       // confirm: "",
     },
     enableReinitialize: true,
-    validationSchema: ValidSchema,
+    validationSchema: ValidAuthSchema,
     onSubmit: (values) => {
       if (log) {
         // if (values.password === values.confirm) {
@@ -101,7 +96,7 @@ const AuthComponent = ({ log }: Props) => {
             </InputGroup>
           </Field>
           <Field>
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
             <InputGroup>
               <InputGroupInput
                 id="password"
@@ -136,7 +131,7 @@ const AuthComponent = ({ log }: Props) => {
         {error && !log && <p className="text-sm text-destructive text-center">Erreur lors de l'inscription</p>}
 
         <Button type="submit" className="mt-2 font-bold">
-          {loading ? <Spinner /> : log ? "Login" : "Register"}
+          {loading ? <Spinner /> : log ? "Connexion" : "Inscription"}
         </Button>
       </FieldSet>
     </form>
