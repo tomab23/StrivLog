@@ -1,18 +1,20 @@
-import { SportList } from "@/consts/SportList"
-
-type Sport = keyof typeof SportList
+import { SportList, type Sport } from "@/consts/SportList"
 
 interface IconSportProps {
-  sport: Sport
+  sport: string
 }
 
 const IconSport = ({ sport }: IconSportProps) => {
-  const { icon: Icon, label } = SportList[sport]
+  if (!(sport in SportList)) {
+    return null
+  }
+
+  const { icon: Icon, label } = SportList[sport as Sport]
 
   return (
     <div className="flex items-center gap-2">
-      <Icon className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
-      <span className="mt-1">{label}</span>
+      <Icon className="h-5 w-5 max-sm:h-4 max-sm:w-4" />
+      <span>{label}</span>
     </div>
   )
 }

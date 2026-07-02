@@ -22,7 +22,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { itemsSport } from "@/consts/ItemsSport"
-import { formatDate } from "@/helpers/FormatDate"
+import { formatDate } from "@/helpers/formatDate"
 import type Activity from "@/models/Activity"
 import {
   ArrowLeft,
@@ -34,27 +34,35 @@ import {
   Timer,
 } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useFormik } from "formik"
 import {
   ValidActivitySchema,
   type ActivityFormValues,
 } from "@/schemas/ActivitySchema"
-import { formatDurationTime } from "@/helpers/FormatDurationTime"
-import { formatTime } from "@/helpers/FormatTime"
+import { formatDurationTime } from "@/helpers/formatDurationTime"
+import { formatTime } from "@/helpers/formatTime"
 import { useActivity } from "@/hooks/UseActivity"
 
-type Props = {
-  id: string
-}
+// type Props = {
+//   id: string
+// }
 
-const ActivityFormPart = ({ id }: Props) => {
+const ActivityFormPart = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const [activity, setActivity] = useState<Activity | null>(null)
-  const { addActivity, editActivity, error, removeActivity, fetchActivitys, fetchActivityById } = useActivity();
+  const {
+    addActivity,
+    editActivity,
+    error,
+    removeActivity,
+    fetchActivitys,
+    fetchActivityById,
+  } = useActivity()
+  const { id } = useParams()
 
-    useEffect(() => {
+  useEffect(() => {
     const loadSession = async () => {
       if (id) setLoading(true)
       if (!id) return
@@ -69,7 +77,7 @@ const ActivityFormPart = ({ id }: Props) => {
     loadSession()
   }, [id, fetchActivityById])
 
-    const handleDelete = (id: string) => {
+  const handleDelete = (id: string) => {
     removeActivity(id)
     fetchActivitys()
     navigate(-1)
@@ -94,21 +102,18 @@ const ActivityFormPart = ({ id }: Props) => {
       // setButtonLoading(true)
       if (!id) {
         await addActivity(
-            // values.date,
-            // values.hour,
-            // values.sport,
-            // values.distance,
-            // values.duration,
-            // values.calories,
-            // values.note ?? ""
-            values
+          // values.date,
+          // values.hour,
+          // values.sport,
+          // values.distance,
+          // values.duration,
+          // values.calories,
+          // values.note ?? ""
+          values
         )
         // alert(JSON.stringify(values))
       } else {
-        await editActivity(
-          id,
-          values
-        )
+        await editActivity(id, values)
         // alert(JSON.stringify(values))
       }
       // setButtonLoading(false)
@@ -198,7 +203,6 @@ const ActivityFormPart = ({ id }: Props) => {
                 value={formik.values.sport}
                 onValueChange={(value) => {
                   formik.setFieldValue("sport", value)
-                  formik.setFieldTouched("sport", true)
                 }}
               >
                 <SelectTrigger>
@@ -321,8 +325,8 @@ const ActivityFormPart = ({ id }: Props) => {
           </FieldGroup>
           {id ? (
             <div className="mt-2 flex items-center justify-between">
-              {/* onClick={() => handleDelete(id)}  */}
               <Button
+                onClick={() => handleDelete(id)}
                 variant={"destructive"}
                 type="button"
                 className="font-bold"
@@ -339,7 +343,11 @@ const ActivityFormPart = ({ id }: Props) => {
             </Button>
           )}
         </FieldSet>
-        {error && <p>{error.message} - {error.code} - {error.status}</p>}
+        {error && (
+          <p>
+            {error.message} - {error.code} - {error.status}
+          </p>
+        )}
       </form>
     </div>
   )
