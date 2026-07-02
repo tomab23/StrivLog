@@ -22,7 +22,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { itemsSport } from "@/consts/ItemsSport"
-import { formatDate } from "@/helpers/formatDate"
+import { formatDate } from "@/helpers/FormatDate"
 import type Activity from "@/models/Activity"
 import {
   ArrowLeft,
@@ -40,8 +40,8 @@ import {
   ValidActivitySchema,
   type ActivityFormValues,
 } from "@/schemas/ActivitySchema"
-import { formatDurationTime } from "@/helpers/formatDurationTime"
-import { formatTime } from "@/helpers/formatTime"
+import { formatDurationTime } from "@/helpers/FormatDurationTime"
+import { formatTime } from "@/helpers/FormatTime"
 import { useActivity } from "@/hooks/UseActivity"
 
 // type Props = {

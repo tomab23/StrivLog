@@ -1,10 +1,10 @@
 
 import IconSport from "../sports/IconSport"
 import { Separator } from "@/components/ui/separator"
-import { formatDurationTime } from "@/helpers/formatDurationTime"
+import { formatDurationTime } from "@/helpers/FormatDurationTime"
 import { NotebookPen } from "lucide-react"
 import type Activity from "@/models/Activity"
-import { displayDate } from "@/helpers/displayDate"
+import { displayDate } from "@/helpers/DisplayDate"
 import { formatHour } from "@/helpers/formatHour"
 import ActivityMenu from "../activity/ActivityMenu"
 import { useNavigate } from "react-router-dom"
@@ -20,35 +20,34 @@ const DiaryDisplay = ({ activity } : Props) => {
   return (
     <div className="rounded-2xl bg-primary-foreground p-4 max-sm:text-sm">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 font-bold">
+        <div className="flex items-center gap-2 font-bold max-sm:text-xs">
           <IconSport sport={activity.sport} />
           <Separator orientation="vertical" />
-          <p className="mt-1">{displayDate(new Date(activity.date))}</p>
+          <p className="sm:mt-1">{displayDate(new Date(activity.date))}</p>
           <Separator orientation="vertical" />
-          <p className="mt-1 text-sm max-sm:text-xs">Début : {formatHour(activity.hour)}</p>
+          <p className="sm:mt-1 text-sm max-sm:text-xs font-normal">Début {formatHour(activity.hour)}</p>
         </div>
 
         <div>
-          {/* <EllipsisVertical className="cursor-pointer max-sm:h-4 max-sm:w-4" /> */}
           <ActivityMenu onEdit={() => navigate(`/activity/${activity.id}`)} />
         </div>
       </div>
 
-      <div className="mt-3 ml-7 flex h-5 items-center gap-4 text-sm max-sm:text-xs">
+      <div className="mt-1 flex sm:h-5 items-center gap-2 text-sm max-sm:text-xs">
         <div className="flex sm:gap-1 max-sm:flex-col">
-          <p>Distance : </p>
+          {/* <p>Distance : </p> */}
           <p>
             {activity.distance} <span title="kilomètres">km</span>
           </p>
         </div>
         <Separator orientation="vertical" />
         <div className="flex sm:gap-1 max-sm:flex-col">
-          <p>Durée : </p>
+          {/* <p>Durée : </p> */}
           <p>{formatDurationTime(activity.duration)}</p>
         </div>
         <Separator orientation="vertical" />
         <div className="flex sm:gap-1 max-sm:flex-col">
-          <p>Calories : </p>
+          {/* <p>Calories : </p> */}
           <p>
             {activity.calories} <span title="kilocalories ">kcal</span>
           </p>
